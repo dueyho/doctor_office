@@ -1,11 +1,12 @@
 class Doctor
 
-  attr_reader :name, :speciality, :id
+  attr_reader :name, :spec_id, :insur_id, :id
 
   def initialize(input_hash)
     @name = input_hash["name"]
-    @speciality = input_hash["speciality"]
+    @spec_id = input_hash["spec_id"]
     @id = input_hash["id"]
+    @insur_id = input_hash["insur_id"]
   end
 
   def self.all
@@ -13,27 +14,17 @@ class Doctor
     doctors = []
     results.each do |result|
       name = result['name']
-      # speciality = result ['speciality']
       doctors << Doctor.new(result)
     end
     doctors
   end
 
   def save
-    results = DB.exec("INSERT INTO doctors(name, speciality) VALUES ('#{@name}', '#{@speciality}') RETURNING id;")
+    results = DB.exec("INSERT INTO doctors(name, spec_id) VALUES ('#{@name}', '#{@spec_id}') RETURNING id;")
     @id = results.first['id'].to_i
   end
 
-  # def self.find(user_input)
-  #   results = DB.exec("SELECT * FROM doctors WHERE name = '#{user_input}';")
-  #   found_results = []
-  #   results.each do |result|
-  #     found_results << result
-  #   end
-  #   found_results
-  # end
-
   def ==(another_doctor)
-    self.name == another_doctor.name && self.speciality == another_doctor.speciality
+    self.name == another_doctor.name && self.spec_id == another_doctor.spec_id
   end
 end
